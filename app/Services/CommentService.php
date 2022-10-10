@@ -9,7 +9,7 @@ class CommentService {
      * Creating the parent and children relationship.
      *
      * @param  object  $parent
-     * @return object  $parent
+     * @return array  $result
      */
     static function generateChildren ($parent) {
         $children = DB::table('comments')->where('parent_id', $parent->id)->get();
@@ -30,5 +30,20 @@ class CommentService {
         ];
 
         return $result;
+    }
+
+    static function verifyParent ($parent_id, $count = 1) {
+        $parent = DB::table('comments')->find($parent_id);
+        if ($parent->id) {
+            $count++;
+            if ($count > 3) {
+                return false;
+            }
+            // throw_if($count > 3, "The max layer is 3");
+            if ($parent->parent_id) {
+                return self::verifyParent($parent->parent_id, $count);
+            }
+        }
+        return true;
     }
 }
