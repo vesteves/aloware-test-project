@@ -22,6 +22,13 @@ class CommentService {
             array_push($parent->comments, $child);
         }
 
-        return $parent;
+        $result = [
+            'id' => $parent->id,
+            'name' => $parent->name,
+            'message' => $parent->message,
+            'comments' => $parent->comments,
+        ];
+
+        return $result;
     }
 }
