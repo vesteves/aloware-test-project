@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CommentRequest;
+use App\Services\CommentService;
 
 class CommentController extends Controller
 {
@@ -15,7 +16,10 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = DB::table('comments')->get();
+        $comments = DB::table('comments')->whereNull('parent_id')->get();
+        foreach ($comments as $index => $comment) {
+            $comments[$index] = CommentService::generateChildren($comment);
+        }
         return response()->json($comments);
     }
 
@@ -44,8 +48,9 @@ class CommentController extends Controller
      */
     public function show($id)
     {
-        $comments = DB::table('comments')->find($id);
-        return response()->json($comments);
+        $comment = DB::table('comments')->find($id);
+        $comment = CommentService::generateChildren($comment);
+        return response()->json($comment);
     }
 
     /**
