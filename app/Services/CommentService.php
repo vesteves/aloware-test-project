@@ -39,7 +39,7 @@ class CommentService {
             if ($count > 3) {
                 return false;
             }
-            // throw_if($count > 3, "The max layer is 3");
+
             if ($parent->parent_id) {
                 return self::verifyParent($parent->parent_id, $count);
             }

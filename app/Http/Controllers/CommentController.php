@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\CommentRequest;
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 use App\Services\CommentService;
 
 class CommentController extends Controller
@@ -25,10 +26,10 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\CommentRequest  $request
+     * @param  \App\Http\Requests\StoreCommentRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CommentRequest $request)
+    public function store(StoreCommentRequest $request)
     {
         $comment = DB::table('comments')->insert([
             'name' => $request->name,
@@ -55,18 +56,17 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * \App\Http\Requests\CommentRequest  $request
+     * \App\Http\Requests\UpdateCommentRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CommentRequest $request, $id)
+    public function update(UpdateCommentRequest $request, $id)
     {
         $comment = DB::table('comments')
             ->where('id', $id)
             ->update([
                 'name' => $request->name,
                 'message' => $request->message,
-                'parent_id' => $request->parent_id,
             ]);
         return response()->json($comment);
     }
